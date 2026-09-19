@@ -213,7 +213,13 @@ def project_proposals(slug: str):
         return jsonify(error="پروژه یافت نشد"), 404
 
     user = current_user()
-    if user is None or project.client_id != user.id:
-        return jsonify(error="دسترسی مجاز نیست"), 403
+    if user is None:
+        return jsonify(error="وارد نشده‌اید"), 401
 
-    return jsonify(items=[proposal_to_dict(p) for p in project.proposals])
+    # The project owner sees every proposal; a freelancer sees only their own.
+    if project.client_id == user.id:
+        proposals = project.proposals
+    else:
+        proposals = [p for p in project.proposals if p.freelancer_id == user.id]
+
+    return jsonify(items=[proposal_to_dict(p) for p in proposals])

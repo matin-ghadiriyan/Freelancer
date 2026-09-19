@@ -31,10 +31,12 @@ def admin_required(view):
     """Allow only authenticated admins."""
 
     @wraps(view)
-    @login_required
     def wrapper(*args, **kwargs):
         user = current_user()
-        if user is None or not user.is_admin:
+        if user is None:
+            flash("برای ادامه ابتدا وارد حساب خود شوید.", "warning")
+            return redirect(url_for("auth.login", next=request.path))
+        if not user.is_admin:
             abort(403)
         return view(*args, **kwargs)
 

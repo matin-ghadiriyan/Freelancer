@@ -28,10 +28,16 @@ projects_bp = Blueprint("projects", __name__, url_prefix="/projects")
 # --------------------------------------------------------------------------- #
 
 def _slugify(text: str) -> str:
-    base = "".join(c if c.isalnum() or c in "-_" else "-" for c in text.strip().lower())
+    # Keep ASCII alphanumerics, map everything else (including Persian) to '-'.
+    base = "".join(
+        c if (c.isascii() and c.isalnum()) or c in "-_" else "-"
+        for c in text.strip().lower()
+    )
     while "--" in base:
         base = base.replace("--", "-")
-    return base.strip("-") or "project"
+    base = base.strip("-")
+    # If nothing usable is left (e.g. a purely Persian title), fall back.
+    return base or "project"
 
 
 def _unique_slug(title: str) -> str:

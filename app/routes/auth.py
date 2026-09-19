@@ -115,8 +115,11 @@ def login():
             session.clear()
             session["user_id"] = user.id
             flash(f"خوش آمدید {user.full_name}!", "success")
-            next_url = request.args.get("next")
-            return redirect(next_url or url_for("main.dashboard"))
+            # Only allow internal redirects to avoid open-redirect attacks.
+            next_url = request.args.get("next") or ""
+            if not next_url.startswith("/") or next_url.startswith("//"):
+                next_url = url_for("main.dashboard")
+            return redirect(next_url)
 
         flash("ایمیل یا رمز عبور نادرست است.", "danger")
         return render_template("auth/login.html", form=request.form), 401
