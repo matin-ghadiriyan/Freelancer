@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}دسترسی مجاز نیست — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section error-section">
+  <div class="container error-box">
+    <span class="error-code">۴۰۳</span>
+    <h1>به این صفحه دسترسی ندارید</h1>
+    <p class="muted">برای مشاهده این بخش باید مجوز لازم را داشته باشید.</p>
+    <div class="form-actions center">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('main.index') }}">بازگشت به خانه</a>
+      <a class="btn btn-outline btn-lg" href="{{ url_for('auth.login') }}">ورود به حساب</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

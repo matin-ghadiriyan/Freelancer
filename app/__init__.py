@@ -1,12 +1,19 @@
 """Application factory with security hardening."""
 #imports
+import os
+
 from flask import Flask , render_template , request , jsonify , abort
 from app.extensions import db , csrf
 from app.rate_limit_function import rate_limit
+from config import config
 
-def create_app() -> Flask:
+def create_app(config_name: str | None = None) -> Flask:
 
     app = Flask(__name__)
+
+    # --- Configuration --------------------------------------------------- #
+    config_name = config_name or os.getenv("FLASK_ENV", "development")
+    app.config.from_object(config.get(config_name, config["development"]))
 
     # --- Extensions ------------------------------------------------------ #
     db.init_app(app)
@@ -23,6 +30,35 @@ def create_app() -> Flask:
 
     for blueprint in all_blueprints:
         app.register_blueprint(blueprint)
+
+    # --- Template helpers ------------------------------------------------ #
+    from app.routes.auth import current_user as _current_user
+
+    @app.context_processor
+    def inject_globals():
+        return {
+            "current_user": _current_user(),
+            "site_name": "فریلنسرینو",
+        }
+
+    @app.template_filter("money")
+    def money_filter(value):
+        try:
+            return f"${float(value):,.0f}"
+        except (TypeError, ValueError):
+            return "توافقی"
+
+    @app.template_filter("stars")
+    def stars_filter(value):
+        try:
+            score = int(round(float(value)))
+        except (TypeError, ValueError):
+            score = 0
+        return "\u2605" * score + "\u2606" * (5 - score)
+
+    @app.template_filter("jalali")
+    def jalali_filter(value):
+        return value.strftime("%Y-%m-%d") if value else ""
 
 
     # --- Error handlers -------------------------------------------------- #

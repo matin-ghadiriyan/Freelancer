@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}{{ site_name }} — بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="pill">بزرگ‌ترین بازار فریلنسری فارسی</span>
+      <h1>پروژه‌ات را بسپار به <span class="grad-text">متخصص‌های حرفه‌ای</span></h1>
+      <p>هزاران فریلنسر متخصص آماده‌اند تا ایده‌های شما را به واقعیت تبدیل کنند. سریع، مطمئن و با کیفیت.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('projects.create') }}">ثبت پروژه رایگان</a>
+        <a class="btn btn-outline btn-lg" href="{{ url_for('freelancers.list_freelancers') }}">مشاهده فریلنسرها</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>{{ stats.projects }}</strong><span>پروژه ثبت‌شده</span></div>
+        <div><strong>{{ stats.freelancers }}</strong><span>فریلنسر فعال</span></div>
+        <div><strong>{{ stats.clients }}</strong><span>کاربر عضو</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-card c1">
+        <div class="fc-icon">🎯</div>
+        <div><strong>پروژه‌های دقیق</strong><small>شرح شفاف و بودجه مشخص</small></div>
+      </div>
+      <div class="floating-card c2">
+        <div class="fc-icon">⭐</div>
+        <div><strong>فریلنسرهای برتر</strong><small>امتیاز و نظرات واقعی</small></div>
+      </div>
+      <div class="floating-card c3">
+        <div class="fc-icon">🔒</div>
+        <div><strong>پرداخت امن</strong><small>تا تحویل کامل کار</small></div>
+      </div>
+      <div class="hero-blob"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+{% if categories %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>دسته‌بندی‌های محبوب</h2>
+      <a href="{{ url_for('projects.list_projects') }}" class="link-more">همه دسته‌ها ←</a>
+    </div>
+    <div class="category-grid">
+      {% for category in categories %}
+        <a class="category-card" href="{{ url_for('projects.list_projects', category=category.slug) }}">
+          <span class="cat-icon">{{ category.icon or '📁' }}</span>
+          <strong>{{ category.name }}</strong>
+          <small>{{ category.projects|length }} پروژه</small>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Featured projects -->
+{% if featured %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>پروژه‌های ویژه</h2>
+      <a href="{{ url_for('projects.list_projects') }}" class="link-more">همه پروژه‌ها ←</a>
+    </div>
+    <div class="project-grid">
+      {% for project in featured %}
+        {% include "projects/_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Latest projects -->
+{% if latest %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>جدیدترین پروژه‌ها</h2>
+      <a href="{{ url_for('projects.list_projects') }}" class="link-more">مشاهده همه ←</a>
+    </div>
+    <div class="project-grid">
+      {% for project in latest %}
+        {% include "projects/_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Top freelancers -->
+{% if top_freelancers %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>فریلنسرهای برتر</h2>
+      <a href="{{ url_for('freelancers.list_freelancers') }}" class="link-more">همه فریلنسرها ←</a>
+    </div>
+    <div class="freelancer-grid">
+      {% for profile in top_freelancers %}
+        {% include "freelancers/_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div>
+      <h2>آماده‌ای شروع کنی؟</h2>
+      <p>همین حالا ثبت‌نام کن و پروژه‌ات را به بهترین‌ها بسپار.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-white btn-lg" href="{{ url_for('auth.register') }}">ثبت‌نام رایگان</a>
+      <a class="btn btn-outline-light btn-lg" href="{{ url_for('projects.list_projects') }}">مشاهده پروژه‌ها</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

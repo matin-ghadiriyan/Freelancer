@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}مدیریت پروژه‌ها — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container"><h1>مدیریت پروژه‌ها</h1></div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="{{ url_for('admin.dashboard') }}">داشبورد</a>
+      <a href="{{ url_for('admin.users') }}">کاربران</a>
+      <a class="active" href="{{ url_for('admin.projects') }}">پروژه‌ها</a>
+      <a href="{{ url_for('admin.categories') }}">دسته‌بندی‌ها</a>
+      <a href="{{ url_for('admin.skills') }}">مهارت‌ها</a>
+      <a href="{{ url_for('admin.reviews') }}">نظرات</a>
+    </div>
+
+    <div class="card table-card">
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>عنوان</th><th>کارفرما</th><th>بودجه</th><th>وضعیت</th><th>ویژه</th><th>عملیات</th></tr>
+        </thead>
+        <tbody>
+          {% for project in projects %}
+            <tr>
+              <td>{{ project.id }}</td>
+              <td><a href="{{ url_for('projects.detail', slug=project.slug) }}">{{ project.title }}</a></td>
+              <td class="muted">{{ project.client.full_name }}</td>
+              <td>{{ project.budget_display }}</td>
+              <td><span class="badge badge-status">{{ project.status }}</span></td>
+              <td>{% if project.is_featured %}<span class="badge badge-featured">ویژه</span>{% else %}—{% endif %}</td>
+              <td>
+                <form method="post" action="{{ url_for('admin.toggle_feature', project_id=project.id) }}" class="inline-form">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <button class="btn btn-sm btn-outline" type="submit">{{ 'حذف ویژه' if project.is_featured else 'ویژه کن' }}</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if pagination.pages > 1 %}
+      <nav class="pagination">
+        {% if pagination.has_prev %}<a href="{{ url_for('admin.projects', page=pagination.prev_num) }}">قبلی</a>{% endif %}
+        {% for p in pagination.iter_pages() %}
+          {% if p %}
+            {% if p == pagination.page %}<span class="current">{{ p }}</span>{% else %}<a href="{{ url_for('admin.projects', page=p) }}">{{ p }}</a>{% endif %}
+          {% else %}<span class="ellipsis">…</span>{% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}<a href="{{ url_for('admin.projects', page=pagination.next_num) }}">بعدی</a>{% endif %}
+      </nav>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

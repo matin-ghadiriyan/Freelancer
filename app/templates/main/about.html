@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}درباره ما — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>درباره {{ site_name }}</h1>
+    <p class="muted">ما پلی هستیم میان ایده‌ها و متخصص‌ها.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow prose">
+    <div class="card">
+      <h2>مأموریت ما</h2>
+      <p>هدف {{ site_name }} ساده‌سازی همکاری میان کارفرمایان و فریلنسرهای حرفه‌ای است. باور داریم هر ایده‌ای، با پیدا کردن انسان درست، به نتیجه می‌رسد.</p>
+    </div>
+
+    <div class="value-grid">
+      <div class="card value-card">
+        <span class="stat-icon">🎯</span>
+        <h3>شفافیت</h3>
+        <p class="muted">بودجه، زمان و شرایط هر پروژه از ابتدا مشخص است.</p>
+      </div>
+      <div class="card value-card">
+        <span class="stat-icon">🔒</span>
+        <h3>امنیت</h3>
+        <p class="muted">پرداخت‌ها تا تحویل کامل کار نزد ما امانت می‌ماند.</p>
+      </div>
+      <div class="card value-card">
+        <span class="stat-icon">⚡</span>
+        <h3>سرعت</h3>
+        <p class="muted">در کمترین زمان بهترین پیشنهادها را دریافت کنید.</p>
+      </div>
+    </div>
+
+    <div class="cta-band">
+      <div class="cta-inner">
+        <div>
+          <h2>با ما همراه شوید</h2>
+          <p>رایگان ثبت‌نام کنید و همین امروز شروع کنید.</p>
+        </div>
+        <a class="btn btn-white btn-lg" href="{{ url_for('auth.register') }}">ثبت‌نام</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

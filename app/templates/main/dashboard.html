@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}داشبورد — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>داشبورد {{ user.full_name }}</h1>
+    <p class="muted">خلاصه فعالیت‌های شما در یک نگاه.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-icon">📁</span>
+        <strong>{{ summary.projects_count }}</strong>
+        <small>پروژه ثبت‌شده</small>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📨</span>
+        <strong>{{ summary.proposals_count }}</strong>
+        <small>پیشنهاد ارسالی</small>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⭐</span>
+        <strong>{{ summary.rating }}</strong>
+        <small>امتیاز شما</small>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">💼</span>
+        <strong>{{ 'دارد' if my_profile else 'ندارد' }}</strong>
+        <small>پروفایل فریلنسری</small>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-head">
+          <h2>پروژه‌های من</h2>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('projects.create') }}">+ پروژه جدید</a>
+        </div>
+        {% if my_projects %}
+          <ul class="list">
+            {% for project in my_projects %}
+              <li class="list-item">
+                <a href="{{ url_for('projects.detail', slug=project.slug) }}">{{ project.title }}</a>
+                <span class="badge badge-status">{{ project.status }}</span>
+                <span class="muted">{{ project.proposal_count }} پیشنهاد</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">هنوز پروژه‌ای ثبت نکرده‌اید.</p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>پیشنهادهای من</h2>
+          <a class="btn btn-outline btn-sm" href="{{ url_for('projects.list_projects') }}">یافتن پروژه</a>
+        </div>
+        {% if my_proposals %}
+          <ul class="list">
+            {% for proposal in my_proposals %}
+              <li class="list-item">
+                <a href="{{ url_for('projects.detail', slug=proposal.project.slug) }}">{{ proposal.project.title }}</a>
+                <span class="badge badge-{{ proposal.status }}">{{ proposal.status }}</span>
+                <span class="muted">{{ proposal.bid_amount|money }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">هنوز پیشنهادی ارسال نکرده‌اید.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

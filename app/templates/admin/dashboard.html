@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}پنل مدیریت — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>پنل مدیریت</h1>
+    <p class="muted">نمای کلی از وضعیت پلتفرم.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="admin-nav">
+      <a class="active" href="{{ url_for('admin.dashboard') }}">داشبورد</a>
+      <a href="{{ url_for('admin.users') }}">کاربران</a>
+      <a href="{{ url_for('admin.projects') }}">پروژه‌ها</a>
+      <a href="{{ url_for('admin.categories') }}">دسته‌بندی‌ها</a>
+      <a href="{{ url_for('admin.skills') }}">مهارت‌ها</a>
+      <a href="{{ url_for('admin.reviews') }}">نظرات</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><span class="stat-icon">👥</span><strong>{{ stats.users }}</strong><small>کاربر</small></div>
+      <div class="stat-card"><span class="stat-icon">🧑‍💻</span><strong>{{ stats.freelancers }}</strong><small>فریلنسر</small></div>
+      <div class="stat-card"><span class="stat-icon">📁</span><strong>{{ stats.projects }}</strong><small>پروژه</small></div>
+      <div class="stat-card"><span class="stat-icon">🟢</span><strong>{{ stats.open_projects }}</strong><small>پروژه باز</small></div>
+      <div class="stat-card"><span class="stat-icon">📨</span><strong>{{ stats.proposals }}</strong><small>پیشنهاد</small></div>
+      <div class="stat-card"><span class="stat-icon">⭐</span><strong>{{ stats.reviews }}</strong><small>نظر</small></div>
+      <div class="stat-card"><span class="stat-icon">📂</span><strong>{{ stats.categories }}</strong><small>دسته‌بندی</small></div>
+      <div class="stat-card"><span class="stat-icon">🛠</span><strong>{{ stats.skills }}</strong><small>مهارت</small></div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-head"><h2>آخرین کاربران</h2><a class="btn btn-outline btn-sm" href="{{ url_for('admin.users') }}">همه</a></div>
+        <ul class="list">
+          {% for user in recent_users %}
+            <li class="list-item"><span>{{ user.full_name }}</span><span class="muted">{{ user.email }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>آخرین پروژه‌ها</h2><a class="btn btn-outline btn-sm" href="{{ url_for('admin.projects') }}">همه</a></div>
+        <ul class="list">
+          {% for project in recent_projects %}
+            <li class="list-item"><span>{{ project.title }}</span><span class="badge badge-status">{{ project.status }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

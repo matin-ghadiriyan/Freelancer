@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}جستجو — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>جستجو</h1>
+    <form method="get" class="search-bar">
+      <input type="text" name="q" value="{{ q }}" placeholder="چه چیزی می‌خواهید پیدا کنید؟" />
+      <select name="kind">
+        <option value="projects" {% if kind == 'projects' %}selected{% endif %}>پروژه‌ها</option>
+        <option value="freelancers" {% if kind == 'freelancers' %}selected{% endif %}>فریلنسرها</option>
+      </select>
+      <button class="btn btn-primary" type="submit">جستجو</button>
+    </form>
+    {% if q %}<p class="muted">{{ results|length }} نتیجه برای «{{ q }}»</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {% if results %}
+      {% if kind == 'freelancers' %}
+        <div class="freelancer-grid">
+          {% for profile in results %}
+            {% include "freelancers/_card.html" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="project-grid">
+          {% for project in results %}
+            {% include "projects/_card.html" %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% elif q %}
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <h3>نتیجه‌ای یافت نشد</h3>
+        <p class="muted">عبارت دیگری را امتحان کنید.</p>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span class="empty-icon">💡</span>
+        <h3>عبارتی را جستجو کنید</h3>
+        <p class="muted">می‌توانید پروژه‌ها یا فریلنسرها را جستجو کنید.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

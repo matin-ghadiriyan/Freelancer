@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container layout-sidebar">
+    <div class="content-main">
+      <div class="detail-head card">
+        <div class="pc-top">
+          {% if project.is_featured %}<span class="badge badge-featured">ویژه</span>{% endif %}
+          <span class="badge badge-{{ project.project_type }}">{{ 'مقطوع' if project.project_type == 'fixed' else 'ساعتی' }}</span>
+          <span class="badge badge-level">
+            {% if project.experience_level == 'entry' %}مبتدی
+            {% elif project.experience_level == 'expert' %}متخصص
+            {% else %}متوسط{% endif %}
+          </span>
+          <span class="badge badge-status">{{ project.status }}</span>
+        </div>
+        <h1>{{ project.title }}</h1>
+        <div class="detail-meta muted">
+          <span>👁 {{ project.views }} بازدید</span>
+          <span>📨 {{ project.proposal_count }} پیشنهاد</span>
+          <span>📅 {{ project.created_at.strftime('%Y-%m-%d') }}</span>
+          {% if project.category %}<span>📁 {{ project.category.name }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>شرح پروژه</h2>
+        <div class="prose">{{ project.description }}</div>
+
+        {% if project.skills %}
+          <h3>مهارت‌های موردنیاز</h3>
+          <div class="pc-tags">
+            {% for skill in project.skills %}<span class="tag">{{ skill.name }}</span>{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if my_proposal %}
+        <div class="card">
+          <h2>پیشنهاد شما</h2>
+          <p class="muted">وضعیت: <strong>{{ my_proposal.status }}</strong></p>
+          <p>مبلغ: {{ my_proposal.bid_amount|money }}{% if my_proposal.delivery_days %} — {{ my_proposal.delivery_days }} روز{% endif %}</p>
+          <div class="prose">{{ my_proposal.cover_letter }}</div>
+        </div>
+      {% elif current_user and current_user.id != project.client_id %}
+        <div class="card">
+          <h2>ارسال پیشنهاد</h2>
+          <form method="post" action="{{ url_for('projects.submit_proposal', slug=project.slug) }}" class="form-stack">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <label>مبلغ پیشنهادی (دلار)
+              <input type="number" name="bid_amount" step="0.01" min="0" required />
+            </label>
+            <label>مدت تحویل (روز)
+              <input type="number" name="delivery_days" min="1" />
+            </label>
+            <label>متن پیشنهاد
+              <textarea name="cover_letter" rows="5" required></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">ارسال پیشنهاد</button>
+          </form>
+        </div>
+      {% elif not current_user %}
+        <div class="card">
+          <p class="muted">برای ارسال پیشنهاد ابتدا <a href="{{ url_for('auth.login', next=request.path) }}">وارد شوید</a>.</p>
+        </div>
+      {% endif %}
+
+      {% if related %}
+        <div class="card">
+          <h2>پروژه‌های مشابه</h2>
+          <div class="project-grid">
+            {% for project in related %}{% include "projects/_card.html" %}{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <aside class="sidebar">
+      <div class="card sticky">
+        <div class="budget-big">{{ project.budget_display }}</div>
+        <div class="divider"></div>
+        <div class="client-box">
+          <span class="avatar-lg">{{ project.client.full_name[:1] }}</span>
+          <div>
+            <strong>{{ project.client.full_name }}</strong>
+            <div class="stars">{{ project.client.average_rating|stars }}</div>
+          </div>
+        </div>
+        {% if not my_proposal and current_user and current_user.id != project.client_id %}
+          <a class="btn btn-primary btn-block" href="#">ارسال پیشنهاد</a>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

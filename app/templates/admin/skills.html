@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}مدیریت مهارت‌ها — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container"><h1>مدیریت مهارت‌ها</h1></div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="{{ url_for('admin.dashboard') }}">داشبورد</a>
+      <a href="{{ url_for('admin.users') }}">کاربران</a>
+      <a href="{{ url_for('admin.projects') }}">پروژه‌ها</a>
+      <a href="{{ url_for('admin.categories') }}">دسته‌بندی‌ها</a>
+      <a class="active" href="{{ url_for('admin.skills') }}">مهارت‌ها</a>
+      <a href="{{ url_for('admin.reviews') }}">نظرات</a>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card">
+        <h2>افزودن مهارت</h2>
+        <form method="post" class="form-stack">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <label>نام *<input type="text" name="name" required /></label>
+          <label>اسلاگ *<input type="text" name="slug" required placeholder="python" /></label>
+          <label>آیکون<input type="text" name="icon" placeholder="🐍" /></label>
+          <button class="btn btn-primary" type="submit">افزودن</button>
+        </form>
+      </div>
+
+      <div class="card table-card">
+        <h2>مهارت‌های موجود</h2>
+        <table class="data-table">
+          <thead><tr><th>#</th><th>نام</th><th>اسلاگ</th><th>عملیات</th></tr></thead>
+          <tbody>
+            {% for skill in skills %}
+              <tr>
+                <td>{{ skill.id }}</td>
+                <td>{{ skill.icon or '' }} {{ skill.name }}</td>
+                <td class="muted">{{ skill.slug }}</td>
+                <td>
+                  <form method="post" action="{{ url_for('admin.delete_skill', skill_id=skill.id) }}" class="inline-form" onsubmit="return confirm('حذف شود؟');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button class="btn btn-sm btn-danger" type="submit">حذف</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

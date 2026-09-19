@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}ورود — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section auth-section">
+  <div class="container auth-grid">
+    <div class="auth-aside">
+      <span class="pill">خوش برگشتی 👋</span>
+      <h1>وارد حساب کاربری‌ات شو</h1>
+      <p class="muted">به پروژه‌ها دسترسی بگیر، پیشنهاد بفرست و کارت را مدیریت کن.</p>
+      <ul class="auth-features">
+        <li>✅ دسترسی به هزاران پروژه فعال</li>
+        <li>✅ ارسال پیشنهاد نامحدود</li>
+        <li>✅ مدیریت امن پرداخت‌ها</li>
+      </ul>
+    </div>
+
+    <form method="post" class="card form-stack auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <h2>ورود</h2>
+
+      <label>ایمیل
+        <input type="email" name="email" required value="{{ form.get('email', '') }}" placeholder="you@example.com" />
+      </label>
+
+      <label>رمز عبور
+        <input type="password" name="password" required placeholder="••••••••" />
+      </label>
+
+      <button class="btn btn-primary btn-block btn-lg" type="submit">ورود</button>
+
+      <p class="muted center">حساب نداری؟ <a href="{{ url_for('auth.register') }}">ثبت‌نام کن</a></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

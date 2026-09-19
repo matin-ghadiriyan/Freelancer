@@ -1,0 +1,39 @@
+<article class="freelancer-card">
+  <div class="fc-head">
+    <span class="avatar-lg">
+      {% if profile.user.avatar_url %}
+        <img src="{{ profile.user.avatar_url }}" alt="{{ profile.user.full_name }}" />
+      {% else %}
+        {{ profile.user.full_name[:1] }}
+      {% endif %}
+    </span>
+    <div class="fc-id">
+      <a href="{{ url_for('freelancers.detail', user_id=profile.user_id) }}" class="fc-name">{{ profile.user.full_name }}</a>
+      <span class="fc-headline">{{ profile.headline }}</span>
+    </div>
+    <span class="avail avail-{{ profile.availability }}">
+      {% if profile.availability == 'available' %}آماده کار
+      {% elif profile.availability == 'busy' %}مشغول
+      {% else %}غایب{% endif %}
+    </span>
+  </div>
+
+  <div class="fc-rating">
+    <span class="stars">{{ profile.user.average_rating|stars }}</span>
+    <span class="muted">{{ profile.user.average_rating }} / 5</span>
+  </div>
+
+  <div class="pc-tags">
+    {% for skill in profile.skills[:4] %}
+      <span class="tag">{{ skill.name }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="fc-stats">
+    <div><strong>{{ profile.success_rate }}%</strong><small>موفقیت</small></div>
+    <div><strong>{{ profile.experience_years }}</strong><small>سال تجربه</small></div>
+    <div><strong>{{ profile.hourly_rate|money if profile.hourly_rate else 'توافقی' }}</strong><small>نرخ ساعتی</small></div>
+  </div>
+
+  <a class="btn btn-outline btn-block" href="{{ url_for('freelancers.detail', user_id=profile.user_id) }}">مشاهده پروفایل</a>
+</article>

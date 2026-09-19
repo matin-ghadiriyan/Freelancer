@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}ثبت پروژه جدید — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>ثبت پروژه جدید</h1>
+    <p class="muted">مشخصات پروژه را دقیق بنویسید تا بهترین فریلنسرها را جذب کنید.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+    <form method="post" class="card form-stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <label>عنوان پروژه *
+        <input type="text" name="title" required maxlength="200" />
+      </label>
+
+      <label>توضیحات پروژه *
+        <textarea name="description" rows="7" required></textarea>
+      </label>
+
+      <div class="form-row">
+        <label>دسته‌بندی
+          <select name="category_id">
+            <option value="">انتخاب کنید</option>
+            {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>سطح تجربه
+          <select name="experience_level">
+            <option value="entry">مبتدی</option>
+            <option value="intermediate" selected>متوسط</option>
+            <option value="expert">متخصص</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>حداقل بودجه (دلار)
+          <input type="number" name="budget_min" step="0.01" min="0" />
+        </label>
+        <label>حداکثر بودجه (دلار)
+          <input type="number" name="budget_max" step="0.01" min="0" />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>نوع پروژه
+          <select name="project_type">
+            <option value="fixed" selected>مقطوع</option>
+            <option value="hourly">ساعتی</option>
+          </select>
+        </label>
+        <label>مهلت تحویل
+          <input type="date" name="deadline" />
+        </label>
+      </div>
+
+      {% if skills %}
+        <fieldset class="skills-fieldset">
+          <legend>مهارت‌های موردنیاز</legend>
+          <div class="chip-select">
+            {% for skill in skills %}
+              <label class="chip">
+                <input type="checkbox" name="skill_ids" value="{{ skill.id }}" />
+                <span>{{ skill.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+      {% endif %}
+
+      <div class="form-actions">
+        <button class="btn btn-primary btn-lg" type="submit">ثبت پروژه</button>
+        <a class="btn btn-ghost btn-lg" href="{{ url_for('projects.list_projects') }}">انصراف</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

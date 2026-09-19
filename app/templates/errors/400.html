@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}درخواست نامعتبر — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section error-section">
+  <div class="container error-box">
+    <span class="error-code">۴۰۰</span>
+    <h1>درخواست شما نامعتبر است</h1>
+    <p class="muted">لطفاً اطلاعات ورودی را بررسی کنید و دوباره تلاش کنید.</p>
+    <div class="form-actions center">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('main.index') }}">بازگشت به خانه</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

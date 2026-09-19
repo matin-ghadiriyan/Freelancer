@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}پروفایل من — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>پروفایل من</h1>
+    <p class="muted">اطلاعات حساب خود را به‌روز نگه دارید.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+    <form method="post" class="card form-stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="profile-head">
+        <span class="avatar-xl">
+          {% if user.avatar_url %}<img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" />{% else %}{{ user.full_name[:1] }}{% endif %}
+        </span>
+        <div>
+          <h2>{{ user.full_name }}</h2>
+          <p class="muted">{{ user.email }}</p>
+          <div class="stars">{{ user.average_rating|stars }} <span class="muted">{{ user.average_rating }} / 5</span></div>
+        </div>
+      </div>
+
+      <label>نام کامل
+        <input type="text" name="full_name" value="{{ user.full_name }}" required />
+      </label>
+
+      <div class="form-row">
+        <label>شماره تماس
+          <input type="text" name="phone" value="{{ user.phone or '' }}" />
+        </label>
+        <label>کشور
+          <input type="text" name="country" value="{{ user.country or '' }}" />
+        </label>
+      </div>
+
+      <label>درباره من
+        <textarea name="bio" rows="5">{{ user.bio or '' }}</textarea>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn btn-primary btn-lg" type="submit">ذخیره تغییرات</button>
+        <a class="btn btn-outline btn-lg" href="{{ url_for('freelancers.my_profile') }}">پروفایل فریلنسری</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

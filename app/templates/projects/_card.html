@@ -1,0 +1,34 @@
+<article class="project-card">
+  <div class="pc-top">
+    {% if project.is_featured %}<span class="badge badge-featured">ویژه</span>{% endif %}
+    <span class="badge badge-{{ project.project_type }}">
+      {{ 'مقطوع' if project.project_type == 'fixed' else 'ساعتی' }}
+    </span>
+    <span class="badge badge-level">
+      {% if project.experience_level == 'entry' %}مبتدی
+      {% elif project.experience_level == 'expert' %}متخصص
+      {% else %}متوسط{% endif %}
+    </span>
+  </div>
+  <h3 class="pc-title">
+    <a href="{{ url_for('projects.detail', slug=project.slug) }}">{{ project.title }}</a>
+  </h3>
+  <p class="pc-desc">{{ project.description[:120] }}{% if project.description|length > 120 %}…{% endif %}</p>
+  <div class="pc-tags">
+    {% for skill in project.skills[:4] %}
+      <span class="tag">{{ skill.name }}</span>
+    {% endfor %}
+  </div>
+  <div class="pc-footer">
+    <div class="pc-budget">{{ project.budget_display }}</div>
+    <div class="pc-meta">
+      <span title="پیشنهادها">📨 {{ project.proposal_count }}</span>
+      <span title="بازدید">👁 {{ project.views }}</span>
+    </div>
+  </div>
+  <div class="pc-client">
+    <span class="mini-avatar">{{ project.client.full_name[:1] }}</span>
+    <span>{{ project.client.full_name }}</span>
+    <span class="muted">{{ project.created_at.strftime('%Y-%m-%d') }}</span>
+  </div>
+</article>

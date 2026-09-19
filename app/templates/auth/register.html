@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section auth-section">
+  <div class="container auth-grid">
+    <div class="auth-aside">
+      <span class="pill">شروع رایگان 🚀</span>
+      <h1>به {{ site_name }} بپیوند</h1>
+      <p class="muted">چه بخواهی پروژه ثبت کنی و چه فریلنسر باشی، جای درستی آمده‌ای.</p>
+      <ul class="auth-features">
+        <li>✅ ثبت‌نام رایگان و سریع</li>
+        <li>✅ پروفایل حرفه‌ای و قابل‌جستجو</li>
+        <li>✅ پرداخت امن و تضمین‌شده</li>
+      </ul>
+    </div>
+
+    <form method="post" class="card form-stack auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <h2>ساخت حساب جدید</h2>
+
+      <label>نام کامل *
+        <input type="text" name="full_name" required value="{{ form.get('full_name', '') }}" placeholder="نام و نام خانوادگی" />
+      </label>
+
+      <label>ایمیل *
+        <input type="email" name="email" required value="{{ form.get('email', '') }}" placeholder="you@example.com" />
+      </label>
+
+      <div class="form-row">
+        <label>رمز عبور *
+          <input type="password" name="password" required minlength="6" placeholder="حداقل ۶ کاراکتر" />
+        </label>
+        <label>تکرار رمز عبور *
+          <input type="password" name="confirm_password" required placeholder="••••••••" />
+        </label>
+      </div>
+
+      <label>نقش شما
+        <select name="role">
+          <option value="client">کارفرما (ثبت پروژه)</option>
+          <option value="freelancer">فریلنسر (انجام پروژه)</option>
+        </select>
+      </label>
+
+      <label>عنوان تخصص (برای فریلنسرها)
+        <input type="text" name="headline" placeholder="مثلاً: توسعه‌دهنده وب" />
+      </label>
+
+      <label>درباره من
+        <textarea name="bio" rows="3" placeholder="کمی درباره خودت بنویس..."></textarea>
+      </label>
+
+      <button class="btn btn-primary btn-block btn-lg" type="submit">ساخت حساب</button>
+
+      <p class="muted center">قبلاً ثبت‌نام کرده‌ای؟ <a href="{{ url_for('auth.login') }}">وارد شو</a></p>
+    </form>
+  </div>
+</section>
+{% endblock %}

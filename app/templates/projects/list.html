@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}پروژه‌ها — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>پروژه‌های باز</h1>
+    <p class="muted">پروژه‌ای متناسب با مهارت خود پیدا کنید و پیشنهاد بفرستید.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container layout-sidebar">
+    <aside class="sidebar">
+      <form method="get" class="filter-card">
+        <h3>فیلترها</h3>
+        <label>
+          دسته‌بندی
+          <select name="category">
+            <option value="">همه</option>
+            {% for category in categories %}
+              <option value="{{ category.slug }}" {% if category.slug == current_category %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>
+          سطح تجربه
+          <select name="level">
+            <option value="">همه</option>
+            <option value="entry" {% if current_level == 'entry' %}selected{% endif %}>مبتدی</option>
+            <option value="intermediate" {% if current_level == 'intermediate' %}selected{% endif %}>متوسط</option>
+            <option value="expert" {% if current_level == 'expert' %}selected{% endif %}>متخصص</option>
+          </select>
+        </label>
+        <label>
+          نوع پروژه
+          <select name="type">
+            <option value="">همه</option>
+            <option value="fixed" {% if current_type == 'fixed' %}selected{% endif %}>مقطوع</option>
+            <option value="hourly" {% if current_type == 'hourly' %}selected{% endif %}>ساعتی</option>
+          </select>
+        </label>
+        <button class="btn btn-primary btn-block" type="submit">اعمال فیلتر</button>
+        <a class="btn btn-ghost btn-block" href="{{ url_for('projects.list_projects') }}">پاک کردن</a>
+      </form>
+    </aside>
+
+    <div class="content-main">
+      {% if projects %}
+        <div class="project-grid">
+          {% for project in projects %}
+            {% include "projects/_card.html" %}
+          {% endfor %}
+        </div>
+
+        {% if pagination.pages > 1 %}
+          <nav class="pagination">
+            {% if pagination.has_prev %}
+              <a href="{{ url_for('projects.list_projects', page=pagination.prev_num, category=current_category, level=current_level, type=current_type) }}">قبلی</a>
+            {% endif %}
+            {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+              {% if p %}
+                {% if p == pagination.page %}
+                  <span class="current">{{ p }}</span>
+                {% else %}
+                  <a href="{{ url_for('projects.list_projects', page=p, category=current_category, level=current_level, type=current_type) }}">{{ p }}</a>
+                {% endif %}
+              {% else %}
+                <span class="ellipsis">…</span>
+              {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+              <a href="{{ url_for('projects.list_projects', page=pagination.next_num, category=current_category, level=current_level, type=current_type) }}">بعدی</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <h3>پروژه‌ای یافت نشد</h3>
+          <p class="muted">با فیلترهای دیگری امتحان کنید یا اولین پروژه را ثبت کنید.</p>
+          <a class="btn btn-primary" href="{{ url_for('projects.create') }}">ثبت پروژه</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

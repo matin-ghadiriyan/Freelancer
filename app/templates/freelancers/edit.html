@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}ویرایش پروفایل فریلنسری — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>پروفایل فریلنسری من</h1>
+    <p class="muted">پروفایل کامل، شانس دیده‌شدن شما را چند برابر می‌کند.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+    <form method="post" class="card form-stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <label>عنوان تخصص *
+        <input type="text" name="headline" required maxlength="180" value="{{ profile.headline if profile else '' }}" placeholder="مثلاً: طراح گرافیک و رابط کاربری" />
+      </label>
+
+      <div class="form-row">
+        <label>نرخ ساعتی (دلار)
+          <input type="number" name="hourly_rate" step="0.01" min="0" value="{{ profile.hourly_rate if profile and profile.hourly_rate else '' }}" />
+        </label>
+        <label>سال‌های تجربه
+          <input type="number" name="experience_years" min="0" value="{{ profile.experience_years if profile else 0 }}" />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>وضعیت
+          <select name="availability">
+            <option value="available" {% if profile and profile.availability == 'available' %}selected{% endif %}>آماده کار</option>
+            <option value="busy" {% if profile and profile.availability == 'busy' %}selected{% endif %}>مشغول</option>
+            <option value="away" {% if profile and profile.availability == 'away' %}selected{% endif %}>غایب</option>
+          </select>
+        </label>
+        <label>لینک نمونه‌کار
+          <input type="url" name="portfolio_url" value="{{ profile.portfolio_url if profile and profile.portfolio_url else '' }}" placeholder="https://..." />
+        </label>
+      </div>
+
+      {% if skills %}
+        <fieldset class="skills-fieldset">
+          <legend>مهارت‌های من</legend>
+          <div class="chip-select">
+            {% set my_skill_ids = profile.skills|map(attribute='id')|list if profile else [] %}
+            {% for skill in skills %}
+              <label class="chip">
+                <input type="checkbox" name="skill_ids" value="{{ skill.id }}" {% if skill.id in my_skill_ids %}checked{% endif %} />
+                <span>{{ skill.name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+      {% endif %}
+
+      <div class="form-actions">
+        <button class="btn btn-primary btn-lg" type="submit">ذخیره پروفایل</button>
+        <a class="btn btn-ghost btn-lg" href="{{ url_for('main.dashboard') }}">انصراف</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}{{ freelancer.full_name }} — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container layout-sidebar">
+    <div class="content-main">
+      <div class="detail-head card">
+        <div class="profile-head">
+          <span class="avatar-xl">
+            {% if freelancer.avatar_url %}<img src="{{ freelancer.avatar_url }}" alt="{{ freelancer.full_name }}" />{% else %}{{ freelancer.full_name[:1] }}{% endif %}
+          </span>
+          <div>
+            <h1>{{ freelancer.full_name }}</h1>
+            <p class="muted">{{ profile.headline }}</p>
+            <div class="detail-meta">
+              <span class="stars">{{ freelancer.average_rating|stars }}</span>
+              <span class="muted">{{ freelancer.average_rating }} / 5</span>
+              <span class="avail avail-{{ profile.availability }}">
+                {% if profile.availability == 'available' %}آماده کار{% elif profile.availability == 'busy' %}مشغول{% else %}غایب{% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if freelancer.bio %}
+        <div class="card">
+          <h2>درباره من</h2>
+          <div class="prose">{{ freelancer.bio }}</div>
+        </div>
+      {% endif %}
+
+      {% if profile.skills %}
+        <div class="card">
+          <h2>مهارت‌ها</h2>
+          <div class="pc-tags">
+            {% for skill in profile.skills %}<span class="tag">{{ skill.name }}</span>{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="card">
+        <h2>نظرات کارفرمایان</h2>
+        {% if reviews %}
+          <ul class="review-list">
+            {% for review in reviews %}
+              <li class="review-item">
+                <div class="review-top">
+                  <span class="mini-avatar">{{ review.author.full_name[:1] }}</span>
+                  <strong>{{ review.author.full_name }}</strong>
+                  <span class="stars">{{ review.rating|stars }}</span>
+                  <span class="muted">{{ review.created_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+                {% if review.comment %}<p>{{ review.comment }}</p>{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">هنوز نظری ثبت نشده است.</p>
+        {% endif %}
+
+        {% if current_user and current_user.id != freelancer.id %}
+          <form method="post" action="{{ url_for('freelancers.add_review', user_id=freelancer.id) }}" class="form-stack review-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <label>امتیاز (۱ تا ۵)
+              <select name="rating" required>
+                {% for i in range(5, 0, -1) %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+              </select>
+            </label>
+            <label>نظر شما
+              <textarea name="comment" rows="4"></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">ثبت نظر</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="card sticky">
+        <div class="budget-big">
+          {% if profile.hourly_rate %}{{ profile.hourly_rate|money }}<small>/ساعت</small>{% else %}توافقی{% endif %}
+        </div>
+        <div class="divider"></div>
+        <div class="fc-stats">
+          <div><strong>{{ profile.success_rate }}%</strong><small>موفقیت</small></div>
+          <div><strong>{{ profile.experience_years }}</strong><small>سال تجربه</small></div>
+          <div><strong>{{ profile.total_earned|money }}</strong><small>درآمد کل</small></div>
+        </div>
+        {% if profile.portfolio_url %}
+          <a class="btn btn-outline btn-block" href="{{ profile.portfolio_url }}" target="_blank" rel="noopener">نمونه‌کارها</a>
+        {% endif %}
+        {% if current_user and current_user.id == freelancer.id %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('freelancers.my_profile') }}">ویرایش پروفایل</a>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
