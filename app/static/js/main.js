@@ -14,6 +14,38 @@
     });
   }
 
+  // --- User avatar dropdowns (click to open/close) -----------------------
+  var userMenus = document.querySelectorAll(".user-menu");
+  var closeAllMenus = function () {
+    userMenus.forEach(function (menu) {
+      menu.classList.remove("open");
+      var btn = menu.querySelector(".avatar-btn, .avatar-btn-xl");
+      if (btn) { btn.setAttribute("aria-expanded", "false"); }
+    });
+  };
+
+  userMenus.forEach(function (menu) {
+    var btn = menu.querySelector(".avatar-btn, .avatar-btn-xl");
+    if (!btn) { return; }
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var willOpen = !menu.classList.contains("open");
+      closeAllMenus();
+      menu.classList.toggle("open", willOpen);
+      btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    var inside = e.target.closest && e.target.closest(".user-menu");
+    if (!inside) { closeAllMenus(); }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeAllMenus(); }
+  });
+
   // --- Auto-dismiss flash messages --------------------------------------
   document.querySelectorAll(".flash").forEach(function (flash) {
     var close = flash.querySelector(".flash-close");

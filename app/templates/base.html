@@ -38,18 +38,33 @@
       <div class="header-actions">
         {% if current_user %}
           <a class="btn btn-ghost" href="{{ url_for('main.dashboard') }}">داشبورد</a>
-          <div class="user-menu">
-            <button class="avatar-btn" type="button">
+          <div class="user-menu" id="userMenu">
+            <button class="avatar-btn" type="button" id="avatarBtn" aria-haspopup="true" aria-expanded="false" aria-label="منوی کاربر">
               {% if current_user.avatar_url %}
                 <img src="{{ current_user.avatar_url }}" alt="{{ current_user.full_name }}" />
               {% else %}
                 <span>{{ current_user.full_name[:1] }}</span>
               {% endif %}
             </button>
-            <div class="dropdown">
-              <a href="{{ url_for('auth.profile') }}">پروفایل من</a>
-              <a href="{{ url_for('freelancers.my_profile') }}">پروفایل فریلنسری</a>
-              <a href="{{ url_for('auth.logout') }}">خروج</a>
+            <div class="dropdown" id="userDropdown" role="menu">
+              <div class="dropdown-head">
+                <span class="avatar-sm">
+                  {% if current_user.avatar_url %}<img src="{{ current_user.avatar_url }}" alt="{{ current_user.full_name }}" />{% else %}{{ current_user.full_name[:1] }}{% endif %}
+                </span>
+                <div class="dropdown-id">
+                  <strong>{{ current_user.full_name }}</strong>
+                  <small>{{ current_user.email }}</small>
+                </div>
+              </div>
+              <div class="dropdown-sep"></div>
+              <a href="{{ url_for('main.dashboard') }}" role="menuitem"><span class="mi">🏠</span> داشبورد</a>
+              <a href="{{ url_for('auth.profile') }}" role="menuitem"><span class="mi">👤</span> پروفایل من</a>
+              <a href="{{ url_for('freelancers.my_profile') }}" role="menuitem"><span class="mi">💼</span> پروفایل فریلنسری</a>
+              {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.dashboard') }}" role="menuitem"><span class="mi">🛠</span> پنل مدیریت</a>
+              {% endif %}
+              <div class="dropdown-sep"></div>
+              <a href="{{ url_for('auth.logout') }}" class="danger" role="menuitem"><span class="mi">🚪</span> خروج</a>
             </div>
           </div>
         {% else %}

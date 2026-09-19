@@ -2,9 +2,50 @@
 {% block title %}داشبورد — {{ site_name }}{% endblock %}
 
 {% block content %}
+<section class="dash-hero">
+  <div class="container">
+    <div class="dash-user">
+      <div class="user-menu dash-user-menu" id="dashUserMenu">
+        <button class="avatar-xl avatar-btn-xl" type="button" id="dashAvatarBtn" aria-haspopup="true" aria-expanded="false" aria-label="منوی کاربر">
+          {% if user.avatar_url %}
+            <img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" />
+          {% else %}
+            {{ user.full_name[:1] }}
+          {% endif %}
+        </button>
+        <div class="dropdown" role="menu">
+          <a href="{{ url_for('auth.profile') }}" role="menuitem"><span class="mi">👤</span> پروفایل من</a>
+          <a href="{{ url_for('freelancers.my_profile') }}" role="menuitem"><span class="mi">💼</span> پروفایل فریلنسری</a>
+          <a href="{{ url_for('auth.logout') }}" class="danger" role="menuitem"><span class="mi">🚪</span> خروج</a>
+        </div>
+      </div>
+      <div class="dash-user-id">
+        <h1>سلام، {{ user.full_name }} 👋</h1>
+        <p class="muted">{{ user.email }}</p>
+        <div class="stars">{{ user.average_rating|stars }} <span class="muted">{{ user.average_rating }} / 5</span></div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <a class="quick-action" href="{{ url_for('auth.profile') }}">
+        <span class="qa-icon">👤</span>
+        <span class="qa-text"><strong>پروفایل من</strong><small>ویرایش اطلاعات حساب</small></span>
+      </a>
+      <a class="quick-action" href="{{ url_for('freelancers.my_profile') }}">
+        <span class="qa-icon">💼</span>
+        <span class="qa-text"><strong>پروفایل فریلنسری</strong><small>مهارت‌ها و نرخ ساعتی</small></span>
+      </a>
+      <a class="quick-action danger" href="{{ url_for('auth.logout') }}">
+        <span class="qa-icon">🚪</span>
+        <span class="qa-text"><strong>خروج</strong><small>بستن نشست کاربری</small></span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="page-head">
   <div class="container">
-    <h1>داشبورد {{ user.full_name }}</h1>
+    <h2>خلاصه فعالیت‌ها</h2>
     <p class="muted">خلاصه فعالیت‌های شما در یک نگاه.</p>
   </div>
 </section>
