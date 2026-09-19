@@ -19,7 +19,10 @@ def create_app() -> Flask:
             abort(429)
 
     # --- Blueprints ------------------------------------------------------ #
+    from app.routes import all_blueprints
 
+    for blueprint in all_blueprints:
+        app.register_blueprint(blueprint)
 
 
     # --- Error handlers -------------------------------------------------- #
