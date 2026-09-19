@@ -22,7 +22,7 @@ def create_app(config_name: str | None = None) -> Flask:
     #--- rait limit --------------------------------------------------------#
     @app.before_request
     def before_request():
-        if not rate_limit():
+        if not rate_limit(limit=120 , ip=request.remote_addr , limit_time=120):
             abort(429)
 
     # --- Blueprints ------------------------------------------------------ #
